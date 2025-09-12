@@ -99,7 +99,7 @@
     - | Col     | Value Type    | constr    | location |
       |---------|---------------|-----------|----------|
       | id      | BIGINT        | PK        | s.id |
-      | name    | VARCHAR(255)  | NN        | s.name |
+      | name    | VARCHAR(255)  | NN, UNIQUE| s.name |
       | domain  | VARCHAR(255)  | NN, UNIQUE| s.domain |
       | owner   | VARCHAR(255)  | NN        | s.shop_owner |
       | email   | VARCHAR(255)  | NN        | s.email |
@@ -116,7 +116,7 @@
       |-------------|---------------|-----------|
       | id          | BIGINT        | PK        |
       | shop_id     | BIGINT        | FK        |
-      | email       | VARCHAR(255)  | non       |
+      | email       | VARCHAR(255)  | NN        |
       | pass_hash   | VARCHAR(255)  | NN        |
       | role        | VARCHAR(50)   | NN        |
       | pic_url     | VARCHAR(500)  | nullable  |
@@ -141,7 +141,9 @@
       | phone         | VARCHAR(20)   | nullable  | c.phone |
       | tags          | TEXT          | nullable  | c.tags |
     - Constraint:
-        - Email unique constraint is UNIQUE(email, shop_id) but allows multiple NULLs.
+        - Email unique constraint is UNIQUE(email, shop_id) but allows multiple NULLs. 
+        - [SQL treats (NULL, shop_1) and (NULL, shop_2) as different values]
+        - Basically, NULLs are counted Distinct.
     - Index: 
         - Customer.email (partial unique where not null).
         - Customer.phone (non-unique index, for fast lookup).
@@ -246,6 +248,7 @@
         - Order.order_number (already unique).
         - Order.customer_id (FK lookup).
         - Order.shop_id (FK lookup).
+        - Order.timestamp (for time-based queries).
         
 
 8. LineItem Table:
@@ -263,6 +266,7 @@
       | total_discount  | DECIMAL(10,2) | NN        | oi.total_discount (str in json) |
     - Constraint:
         - Composite unique constraint is UNIQUE(order_id, product_id, variant_id) to avoid duplicate line items for same product variant in an order.
+        - No, but removing this as it might cause issue in case of multiple same variant in one order due to partial fulfillment etc.
     - Index:
         - LineItem.order_id (FK lookup).
         - LineItem.product_id (FK lookup).

@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 
-from db_models import Base, User
+from .db_models import Base, User
 import os
 from dotenv import load_dotenv
 
