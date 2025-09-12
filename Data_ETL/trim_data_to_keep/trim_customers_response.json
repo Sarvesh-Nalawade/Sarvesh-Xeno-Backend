@@ -1,0 +1,40 @@
+{
+    "customers": [
+        {
+            "id": 9318086836517,
+            "created_at": "2025-09-11T12:13:18-04:00",
+            "first_name": "Russell",
+            "last_name": "Winfield",
+            "email": "Russel.winfield@example.com",
+            "phone": "+16135550135",
+            "orders_count": 0,
+            "state": "disabled",
+            "tags": "VIP",
+            "total_spent": "0.00",
+            "last_order_id": null,
+            "last_order_name": null,
+            "currency": "INR",
+            "addresses": [
+                {
+                    "id": 12429199933733,
+                    "customer_id": 9318086836517,
+                    "first_name": "Russell",
+                    "last_name": "Winfield",
+                    "company": "Company Name",
+                    "address1": "105 Victoria St",
+                    "address2": null,
+                    "city": "Toronto",
+                    "province": null,
+                    "country": "Canada",
+                    "zip": "M5C1N7",
+                    "phone": null,
+                    "name": "Russell Winfield",
+                    "province_code": null,
+                    "country_code": "CA",
+                    "country_name": "Canada",
+                    "default": true
+                }
+            ]
+        }
+    ]
+}

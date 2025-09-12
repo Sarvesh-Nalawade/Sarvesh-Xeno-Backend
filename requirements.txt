@@ -1,0 +1,4 @@
+pytz
+python-dotenv
+SQLAlchemy
+mysql-connector-python

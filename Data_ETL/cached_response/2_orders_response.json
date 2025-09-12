@@ -1,0 +1,805 @@
+{
+    "orders": [
+        {
+            "id": 7421646831909,
+            "admin_graphql_api_id": "gid:\/\/shopify\/Order\/7421646831909",
+            "app_id": 1354745,
+            "browser_ip": "223.187.117.235",
+            "buyer_accepts_marketing": false,
+            "cancel_reason": null,
+            "cancelled_at": null,
+            "cart_token": null,
+            "checkout_id": 39128305271077,
+            "checkout_token": "535fecacf268f74fd830485325749fa5",
+            "client_details": {
+                "accept_language": null,
+                "browser_height": null,
+                "browser_ip": "223.187.117.235",
+                "browser_width": null,
+                "session_hash": null,
+                "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/140.0.0.0 Safari\/537.36"
+            },
+            "closed_at": null,
+            "company": null,
+            "confirmation_number": "ERVNUFK50",
+            "confirmed": true,
+            "contact_email": "sarvesh.vitchennai@gmail.com",
+            "created_at": "2025-09-12T03:48:20-04:00",
+            "currency": "INR",
+            "current_subtotal_price": "14619.55",
+            "current_subtotal_price_set": {
+                "shop_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_additional_fees_set": null,
+            "current_total_discounts": "0.00",
+            "current_total_discounts_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_duties_set": null,
+            "current_total_price": "17251.07",
+            "current_total_price_set": {
+                "shop_money": {
+                    "amount": "17251.07",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "17251.07",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_tax": "2631.52",
+            "current_total_tax_set": {
+                "shop_money": {
+                    "amount": "2631.52",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2631.52",
+                    "currency_code": "INR"
+                }
+            },
+            "customer_locale": "en",
+            "device_id": null,
+            "discount_codes": [],
+            "duties_included": false,
+            "email": "sarvesh.vitchennai@gmail.com",
+            "estimated_taxes": false,
+            "financial_status": "paid",
+            "fulfillment_status": null,
+            "landing_site": null,
+            "landing_site_ref": null,
+            "location_id": null,
+            "merchant_business_entity_id": "29034119461",
+            "merchant_of_record_app_id": null,
+            "name": "#1002",
+            "note": null,
+            "note_attributes": [],
+            "number": 2,
+            "order_number": 1002,
+            "order_status_url": "https:\/\/sarvesh-xeno-store.myshopify.com\/95800131877\/orders\/a8a3c369ab4c7e3dba4c01cb05d03a61\/authenticate?key=79e6101bbc4e51708d14102f6991a524",
+            "original_total_additional_fees_set": null,
+            "original_total_duties_set": null,
+            "payment_gateway_names": [
+                "manual"
+            ],
+            "phone": "+918805060804",
+            "po_number": null,
+            "presentment_currency": "INR",
+            "processed_at": "2025-09-12T03:48:19-04:00",
+            "reference": null,
+            "referring_site": null,
+            "source_identifier": null,
+            "source_name": "shopify_draft_order",
+            "source_url": null,
+            "subtotal_price": "14619.55",
+            "subtotal_price_set": {
+                "shop_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                }
+            },
+            "tags": "",
+            "tax_exempt": false,
+            "tax_lines": [
+                {
+                    "price": "2631.52",
+                    "rate": 0.18,
+                    "title": "IGST",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "2631.52",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "2631.52",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "channel_liable": false
+                }
+            ],
+            "taxes_included": false,
+            "test": false,
+            "token": "a8a3c369ab4c7e3dba4c01cb05d03a61",
+            "total_cash_rounding_payment_adjustment_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_cash_rounding_refund_adjustment_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_discounts": "0.00",
+            "total_discounts_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_line_items_price": "14619.55",
+            "total_line_items_price_set": {
+                "shop_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "14619.55",
+                    "currency_code": "INR"
+                }
+            },
+            "total_outstanding": "0.00",
+            "total_price": "17251.07",
+            "total_price_set": {
+                "shop_money": {
+                    "amount": "17251.07",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "17251.07",
+                    "currency_code": "INR"
+                }
+            },
+            "total_shipping_price_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_tax": "2631.52",
+            "total_tax_set": {
+                "shop_money": {
+                    "amount": "2631.52",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2631.52",
+                    "currency_code": "INR"
+                }
+            },
+            "total_tip_received": "0.00",
+            "total_weight": 22680,
+            "updated_at": "2025-09-12T03:48:21-04:00",
+            "user_id": 121069928741,
+            "billing_address": {
+                "first_name": "Sarvesh",
+                "address1": "My Home Punawale Kate Wasti Road Kate Wasti Punawale",
+                "phone": "+918805060804",
+                "city": "Pimpri-Chinchwad",
+                "zip": "411033",
+                "province": "Maharashtra",
+                "country": "India",
+                "last_name": "Nalawade",
+                "address2": "1221",
+                "company": "Svasti",
+                "latitude": 18.6239856,
+                "longitude": 73.7341629,
+                "name": "Sarvesh Nalawade",
+                "country_code": "IN",
+                "province_code": "MH"
+            },
+            "customer": {
+                "id": 9319172309285,
+                "created_at": "2025-09-12T03:33:00-04:00",
+                "updated_at": "2025-09-12T03:48:20-04:00",
+                "first_name": "Sarvesh",
+                "last_name": "Nalawade",
+                "state": "disabled",
+                "note": "i am a builder ",
+                "verified_email": true,
+                "multipass_identifier": null,
+                "tax_exempt": false,
+                "email_marketing_consent": {
+                    "state": "not_subscribed",
+                    "opt_in_level": "single_opt_in",
+                    "consent_updated_at": null
+                },
+                "sms_marketing_consent": {
+                    "state": "not_subscribed",
+                    "opt_in_level": "single_opt_in",
+                    "consent_updated_at": null,
+                    "consent_collected_from": "SHOPIFY"
+                },
+                "tags": "VIP",
+                "email": "sarvesh.vitchennai@gmail.com",
+                "phone": "+918805060804",
+                "currency": "INR",
+                "tax_exemptions": [],
+                "admin_graphql_api_id": "gid:\/\/shopify\/Customer\/9319172309285",
+                "default_address": {
+                    "id": 12430558200101,
+                    "customer_id": 9319172309285,
+                    "first_name": "Sarvesh",
+                    "last_name": "Nalawade",
+                    "company": "Svasti",
+                    "address1": "My Home Punawale Kate Wasti Road Kate Wasti Punawale",
+                    "address2": "1221",
+                    "city": "Pimpri-Chinchwad",
+                    "province": "Maharashtra",
+                    "country": "India",
+                    "zip": "411033",
+                    "phone": "+918805060804",
+                    "name": "Sarvesh Nalawade",
+                    "province_code": "MH",
+                    "country_code": "IN",
+                    "country_name": "India",
+                    "default": true
+                }
+            },
+            "discount_applications": [],
+            "fulfillments": [],
+            "line_items": [
+                {
+                    "id": 18197211906341,
+                    "admin_graphql_api_id": "gid:\/\/shopify\/LineItem\/18197211906341",
+                    "attributed_staffs": [],
+                    "current_quantity": 4,
+                    "fulfillable_quantity": 4,
+                    "fulfillment_service": "snow-city-warehouse",
+                    "fulfillment_status": null,
+                    "gift_card": false,
+                    "grams": 0,
+                    "name": "The 3p Fulfilled Snowboard",
+                    "price": "2629.95",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "2629.95",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "2629.95",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "product_exists": true,
+                    "product_id": 10086092112165,
+                    "properties": [],
+                    "quantity": 4,
+                    "requires_shipping": true,
+                    "sku": "sku-hosted-1",
+                    "taxable": true,
+                    "title": "The 3p Fulfilled Snowboard",
+                    "total_discount": "0.00",
+                    "total_discount_set": {
+                        "shop_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "variant_id": 51146873733413,
+                    "variant_inventory_management": "shopify",
+                    "variant_title": null,
+                    "vendor": "Sarvesh Xeno Store",
+                    "tax_lines": [
+                        {
+                            "channel_liable": false,
+                            "price": "1893.56",
+                            "price_set": {
+                                "shop_money": {
+                                    "amount": "1893.56",
+                                    "currency_code": "INR"
+                                },
+                                "presentment_money": {
+                                    "amount": "1893.56",
+                                    "currency_code": "INR"
+                                }
+                            },
+                            "rate": 0.18,
+                            "title": "IGST"
+                        }
+                    ],
+                    "duties": [],
+                    "discount_allocations": []
+                },
+                {
+                    "id": 18197211939109,
+                    "admin_graphql_api_id": "gid:\/\/shopify\/LineItem\/18197211939109",
+                    "attributed_staffs": [],
+                    "current_quantity": 1,
+                    "fulfillable_quantity": 1,
+                    "fulfillment_service": "manual",
+                    "fulfillment_status": null,
+                    "gift_card": false,
+                    "grams": 0,
+                    "name": "The Collection Snowboard: Hydrogen",
+                    "price": "600.00",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "600.00",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "600.00",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "product_exists": true,
+                    "product_id": 10086091784485,
+                    "properties": [],
+                    "quantity": 1,
+                    "requires_shipping": true,
+                    "sku": null,
+                    "taxable": true,
+                    "title": "The Collection Snowboard: Hydrogen",
+                    "total_discount": "0.00",
+                    "total_discount_set": {
+                        "shop_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "variant_id": 51146873209125,
+                    "variant_inventory_management": "shopify",
+                    "variant_title": null,
+                    "vendor": "Hydrogen Vendor",
+                    "tax_lines": [
+                        {
+                            "channel_liable": false,
+                            "price": "108.00",
+                            "price_set": {
+                                "shop_money": {
+                                    "amount": "108.00",
+                                    "currency_code": "INR"
+                                },
+                                "presentment_money": {
+                                    "amount": "108.00",
+                                    "currency_code": "INR"
+                                }
+                            },
+                            "rate": 0.18,
+                            "title": "IGST"
+                        }
+                    ],
+                    "duties": [],
+                    "discount_allocations": []
+                },
+                {
+                    "id": 18197211971877,
+                    "admin_graphql_api_id": "gid:\/\/shopify\/LineItem\/18197211971877",
+                    "attributed_staffs": [],
+                    "current_quantity": 5,
+                    "fulfillable_quantity": 5,
+                    "fulfillment_service": "manual",
+                    "fulfillment_status": null,
+                    "gift_card": false,
+                    "grams": 4536,
+                    "name": "The Complete Snowboard - Dawn",
+                    "price": "699.95",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "699.95",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "699.95",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "product_exists": true,
+                    "product_id": 10086091915557,
+                    "properties": [],
+                    "quantity": 5,
+                    "requires_shipping": true,
+                    "sku": null,
+                    "taxable": true,
+                    "title": "The Complete Snowboard",
+                    "total_discount": "0.00",
+                    "total_discount_set": {
+                        "shop_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "variant_id": 51146873307429,
+                    "variant_inventory_management": "shopify",
+                    "variant_title": "Dawn",
+                    "vendor": "Snowboard Vendor",
+                    "tax_lines": [
+                        {
+                            "channel_liable": false,
+                            "price": "629.96",
+                            "price_set": {
+                                "shop_money": {
+                                    "amount": "629.96",
+                                    "currency_code": "INR"
+                                },
+                                "presentment_money": {
+                                    "amount": "629.96",
+                                    "currency_code": "INR"
+                                }
+                            },
+                            "rate": 0.18,
+                            "title": "IGST"
+                        }
+                    ],
+                    "duties": [],
+                    "discount_allocations": []
+                }
+            ],
+            "payment_terms": null,
+            "refunds": [],
+            "shipping_address": {
+                "first_name": "Sarvesh",
+                "address1": "My Home Punawale Kate Wasti Road Kate Wasti Punawale",
+                "phone": "+918805060804",
+                "city": "Pimpri-Chinchwad",
+                "zip": "411033",
+                "province": "Maharashtra",
+                "country": "India",
+                "last_name": "Nalawade",
+                "address2": "1221",
+                "company": "Svasti",
+                "latitude": 18.6239856,
+                "longitude": 73.7341629,
+                "name": "Sarvesh Nalawade",
+                "country_code": "IN",
+                "province_code": "MH"
+            },
+            "shipping_lines": []
+        },
+        {
+            "id": 7420823765285,
+            "admin_graphql_api_id": "gid:\/\/shopify\/Order\/7420823765285",
+            "app_id": 1354745,
+            "browser_ip": "122.187.117.179",
+            "buyer_accepts_marketing": false,
+            "cancel_reason": null,
+            "cancelled_at": null,
+            "cart_token": null,
+            "checkout_id": 39126057910565,
+            "checkout_token": "72cae86c5a3e0871cb6fe43fc6337ad6",
+            "client_details": {
+                "accept_language": null,
+                "browser_height": null,
+                "browser_ip": "122.187.117.179",
+                "browser_width": null,
+                "session_hash": null,
+                "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/140.0.0.0 Safari\/537.36"
+            },
+            "closed_at": null,
+            "company": null,
+            "confirmation_number": "6IGPNKV0C",
+            "confirmed": true,
+            "contact_email": null,
+            "created_at": "2025-09-11T12:58:11-04:00",
+            "currency": "INR",
+            "current_subtotal_price": "2629.95",
+            "current_subtotal_price_set": {
+                "shop_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_additional_fees_set": null,
+            "current_total_discounts": "0.00",
+            "current_total_discounts_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_duties_set": null,
+            "current_total_price": "2866.65",
+            "current_total_price_set": {
+                "shop_money": {
+                    "amount": "2866.65",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2866.65",
+                    "currency_code": "INR"
+                }
+            },
+            "current_total_tax": "236.70",
+            "current_total_tax_set": {
+                "shop_money": {
+                    "amount": "236.70",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "236.70",
+                    "currency_code": "INR"
+                }
+            },
+            "customer_locale": "en",
+            "device_id": null,
+            "discount_codes": [],
+            "duties_included": false,
+            "email": "",
+            "estimated_taxes": false,
+            "financial_status": "paid",
+            "fulfillment_status": null,
+            "landing_site": null,
+            "landing_site_ref": null,
+            "location_id": 108618055973,
+            "merchant_business_entity_id": "29034119461",
+            "merchant_of_record_app_id": null,
+            "name": "#1001",
+            "note": null,
+            "note_attributes": [],
+            "number": 1,
+            "order_number": 1001,
+            "order_status_url": "https:\/\/sarvesh-xeno-store.myshopify.com\/95800131877\/orders\/aae5acc7121e77f4554eba8e5887ac3e\/authenticate?key=c25710db521ceff39f3301caffe3ea9c",
+            "original_total_additional_fees_set": null,
+            "original_total_duties_set": null,
+            "payment_gateway_names": [
+                "manual"
+            ],
+            "phone": null,
+            "po_number": null,
+            "presentment_currency": "INR",
+            "processed_at": "2025-09-11T12:58:10-04:00",
+            "reference": null,
+            "referring_site": null,
+            "source_identifier": null,
+            "source_name": "shopify_draft_order",
+            "source_url": null,
+            "subtotal_price": "2629.95",
+            "subtotal_price_set": {
+                "shop_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                }
+            },
+            "tags": "",
+            "tax_exempt": false,
+            "tax_lines": [
+                {
+                    "price": "236.70",
+                    "rate": 0.09,
+                    "title": "CGST",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "236.70",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "236.70",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "channel_liable": false
+                }
+            ],
+            "taxes_included": false,
+            "test": false,
+            "token": "aae5acc7121e77f4554eba8e5887ac3e",
+            "total_cash_rounding_payment_adjustment_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_cash_rounding_refund_adjustment_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_discounts": "0.00",
+            "total_discounts_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_line_items_price": "2629.95",
+            "total_line_items_price_set": {
+                "shop_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2629.95",
+                    "currency_code": "INR"
+                }
+            },
+            "total_outstanding": "0.00",
+            "total_price": "2866.65",
+            "total_price_set": {
+                "shop_money": {
+                    "amount": "2866.65",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "2866.65",
+                    "currency_code": "INR"
+                }
+            },
+            "total_shipping_price_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_tax": "236.70",
+            "total_tax_set": {
+                "shop_money": {
+                    "amount": "236.70",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "236.70",
+                    "currency_code": "INR"
+                }
+            },
+            "total_tip_received": "0.00",
+            "total_weight": 0,
+            "updated_at": "2025-09-11T12:58:12-04:00",
+            "user_id": 121069928741,
+            "billing_address": null,
+            "customer": null,
+            "discount_applications": [],
+            "fulfillments": [],
+            "line_items": [
+                {
+                    "id": 18195675939109,
+                    "admin_graphql_api_id": "gid:\/\/shopify\/LineItem\/18195675939109",
+                    "attributed_staffs": [],
+                    "current_quantity": 1,
+                    "fulfillable_quantity": 1,
+                    "fulfillment_service": "snow-city-warehouse",
+                    "fulfillment_status": null,
+                    "gift_card": false,
+                    "grams": 0,
+                    "name": "The 3p Fulfilled Snowboard",
+                    "price": "2629.95",
+                    "price_set": {
+                        "shop_money": {
+                            "amount": "2629.95",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "2629.95",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "product_exists": true,
+                    "product_id": 10086092112165,
+                    "properties": [],
+                    "quantity": 1,
+                    "requires_shipping": true,
+                    "sku": "sku-hosted-1",
+                    "taxable": true,
+                    "title": "The 3p Fulfilled Snowboard",
+                    "total_discount": "0.00",
+                    "total_discount_set": {
+                        "shop_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        },
+                        "presentment_money": {
+                            "amount": "0.00",
+                            "currency_code": "INR"
+                        }
+                    },
+                    "variant_id": 51146873733413,
+                    "variant_inventory_management": "shopify",
+                    "variant_title": null,
+                    "vendor": "Sarvesh Xeno Store",
+                    "tax_lines": [
+                        {
+                            "channel_liable": false,
+                            "price": "236.70",
+                            "price_set": {
+                                "shop_money": {
+                                    "amount": "236.70",
+                                    "currency_code": "INR"
+                                },
+                                "presentment_money": {
+                                    "amount": "236.70",
+                                    "currency_code": "INR"
+                                }
+                            },
+                            "rate": 0.09,
+                            "title": "CGST"
+                        }
+                    ],
+                    "duties": [],
+                    "discount_allocations": []
+                }
+            ],
+            "payment_terms": null,
+            "refunds": [],
+            "shipping_address": null,
+            "shipping_lines": []
+        }
+    ]
+}

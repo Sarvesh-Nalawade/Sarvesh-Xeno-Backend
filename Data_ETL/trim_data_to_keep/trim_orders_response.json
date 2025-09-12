@@ -1,0 +1,73 @@
+{
+    "orders": [
+        {
+            "order_number": 1001,
+            "name": "#1001 (order name - can ignore)",
+            "id": 7420823765285,
+            "app_id": 1354745,
+            "cancel_reason": null,
+            "cancelled_at": null,
+            "checkout_id": 39126057910565,
+            "client_details": {
+                "browser_ip": "122.187.117.179"
+            },
+            "closed_at": null,
+            "company": null,
+            "confirmed": true,
+            "contact_email": null,
+            "created_at": "2025-09-11T12:58:11-04:00",
+            "currency": "INR",
+            "current_subtotal_price": "2629.95",
+            "current_total_discounts": "0.00",
+            "current_total_price": "2866.65",
+            "current_total_tax": "236.70",
+            "financial_status": "paid",
+            "fulfillment_status": null,
+            "location_id": 108618055973,
+            "merchant_business_entity_id": "29034119461",
+            "payment_gateway_names": [
+                "manual"
+            ],
+            "phone": null,
+            "processed_at": "2025-09-11T12:58:10-04:00",
+            "source_name": "shopify_draft_order",
+            "subtotal_price": "2629.95",
+            "tags": "",
+            "token": "aae5acc7121e77f4554eba8e5887ac3e",
+            "total_discounts": "0.00",
+            "total_price": "2866.65",
+            "total_shipping_price_set": {
+                "shop_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                },
+                "presentment_money": {
+                    "amount": "0.00",
+                    "currency_code": "INR"
+                }
+            },
+            "total_tax": "236.70",
+            "total_tip_received": "0.00",
+            "total_weight": 0,
+            "updated_at": "2025-09-11T12:58:12-04:00",
+            "user_id": 121069928741,
+            "line_items": [
+                {
+                    "id": 18195675939109,
+                    "current_quantity": 1,
+                    "fulfillable_quantity": 1,
+                    "grams": 0,
+                    "name": "The 3p Fulfilled Snowboard",
+                    "price": "2629.95",
+                    "product_id": 10086092112165,
+                    "quantity": 1,
+                    "requires_shipping": true,
+                    "total_discount": "0.00",
+                    "variant_id": 51146873733413,
+                    "vendor": "Sarvesh Xeno Store"
+                } 
+            ],
+            "shipping_address": null
+        }
+    ]
+}
