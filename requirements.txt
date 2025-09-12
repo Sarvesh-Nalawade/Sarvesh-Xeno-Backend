@@ -1,4 +1,6 @@
 pytz
 python-dotenv
 SQLAlchemy
-mysql-connector-python
+PyMySQL
+cryptography
+# mysql-connector-python

@@ -3,13 +3,15 @@
     1. [Initialization](#initialization)
     2. [Schema](#schema)
     3. [Data Extraction](#data-extraction)
-        1. [Customer Table](#customer-table)
-        2. [Address Table](#address-table)
-        3. [Product Table](#product-table)
-        4. [Variant Table](#variant-table)
-
+        1. [Shop Table](#shop-table)
+        2. [TenantUsers Table](#tenantusers-table)
+        3. [Customer Table](#customer-table)
+        4. [Address Table](#address-table)
+        5. [Product Table](#product-table)
+        6. [Variant Table](#variant-table)
+        7. [Order Table](#order-table)
+        8. [LineItem Table](#lineitem-table)
 2. [Others](#others)
-
 
 
 ---
@@ -39,7 +41,7 @@
     ```
 
 
-## Schema:
+## Design:
 
 1. The Shopify API returns response under these categories:
     - Products
@@ -68,7 +70,10 @@
 
 ---
 
-## Data Extraction:
+## Schema:
+
+> [!IMPORTANT]  
+> Any change made in Schema must be reflected in three places - 1. This README 2. db_models.py functions 3. db_models.py Docstring declarations 
 
 **Timestamp Note**:
 - Shopify gives timestamps with tz, but for storage, I will always use UTC and store as DATETIME (without tz info) in MySQL.

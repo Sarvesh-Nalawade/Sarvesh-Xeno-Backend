@@ -1,0 +1,460 @@
+import os
+from dotenv import load_dotenv
+
+import re
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
+
+from db_models import (
+    Base, Shop, TenantUser,
+    Customer, Address, Product,
+    Variant, Order, LineItem
+)
+
+
+# ------------------------------------------------------------------------------
+# Base and Constants:
+# ------------------------------------------------------------------------------
+
+load_dotenv()
+
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASSWORD", None)
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "3306")
+DB_NAME = os.getenv("DB_DATABASE", "xeno_shopify")
+DB_CHAR = os.getenv("DB_CHARSET", "utf8mb4")
+VERBOSE = os.getenv("DB_VERBOSE", "true").lower() == "true"
+
+DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset={DB_CHAR}"
+
+engine = create_engine(DATABASE_URL, echo=VERBOSE, future=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+# ------------------------------------------------------------------------------
+# Helper Functions:
+# ------------------------------------------------------------------------------
+
+def iso_to_utc(iso_ts: str) -> datetime:
+    """Parse an ISO 8601 timestamp and return a naive UTC datetime
+
+    Args:
+        iso_ts (str): ISO-8601 timestamp string, e.g. "2025-09-11T12:13:18-04:00" or "2025-09-11T16:13:18Z"
+
+    Returns:
+        datetime: A naive datetime object in UTC timezone.
+
+    Raises:
+        ValueError: If the input string is not a valid ISO-8601 timestamp.
+
+    Example:
+        iso_to_utc_naive("2025-09-11T12:13:18-04:00")  -> datetime(2025,9,11,16,13,18)
+    """
+
+    if not iso_ts or not isinstance(iso_ts, str):
+        raise ValueError("iso_ts must be a non-empty ISO-8601 string")
+
+    s = iso_ts.strip()
+
+    # normalize trailing Z -> +00:00 because datetime.fromisoformat doesn't accept 'Z'
+    if s.endswith("Z"):
+        s = s[:-1] + "+00:00"
+
+    try:
+        dt = datetime.fromisoformat(s)
+    except ValueError:
+        # fallback: insert colon into timezone if format is like ...+HHMM or ...-HHMM
+        m = re.match(r"^(.*)([+-]\d{2})(\d{2})$", s)
+        if m:
+            s = f"{m.group(1)}{m.group(2)}:{m.group(3)}"
+            dt = datetime.fromisoformat(s)
+        else:
+            # can't parse
+            raise
+
+    # If timestamp is naive (no tz info), we assume it's already UTC.
+    if dt.tzinfo is None:
+        # return naive datetime (assumed UTC)
+        return dt.replace(tzinfo=None)
+
+    # Convert to UTC and return naive datetime
+    dt_utc = dt.astimezone(timezone.utc).replace(tzinfo=None)
+    return dt_utc
+
+
+# ------------------------------------------------------------------------------
+# DB Utilities:
+# ------------------------------------------------------------------------------
+
+def get_db():
+    """Provide a transactional session."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def clear_entire_database():
+    """Drops all tables in the database."""
+    Base.metadata.drop_all(bind=engine)
+    print("⚠️  Cleared Entire DB")
+
+
+def create_all_tables():
+    """Creates all tables in the database."""
+    Base.metadata.create_all(bind=engine)
+    print("✅ Created All Tables")
+
+
+# ------------------------------------------------------------------------------
+# Insert: Shop and TenantUser
+# ------------------------------------------------------------------------------
+
+def insert_shop(db: Session, id: int, name: str, domain: str, owner: str, email: str) -> Shop:
+    """Insert a new Shop row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Shop ID.
+        name (str): Shop name.
+        domain (str): Shop domain.
+        owner (str): Shop owner name.
+        email (str): Shop/Owner email.
+    Returns:
+        Shop: The newly created Shop object.
+    """
+
+    shop = Shop(id=id, name=name, domain=domain, owner=owner, email=email)
+    db.add(shop)
+    db.commit()
+    db.refresh(shop)
+    return shop
+
+
+def insert_tenant_user(
+        db: Session, id: int, shop_id: int, email: str, pass_hash: str,
+        role: str, created_at: str, pic_url: Optional[str] = None
+) -> TenantUser:
+    """Insert a new TenantUser row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): TenantUser ID.
+        shop_id (int): Associated Shop ID.
+        email (str): User email.
+        pass_hash (str): Password hash.
+        role (str): User role (e.g., 'admin', 'staff').
+        created_at (str): ISO-8601 timestamp string for creation time `2025-09-11T12:13:18-04:00`.
+        pic_url (Optional[str]): URL to user's profile picture. Default is None.
+    Returns:
+        TenantUser: The newly created TenantUser object.
+    """
+
+    tenant_user = TenantUser(
+        id=id, shop_id=shop_id, email=email, pass_hash=pass_hash,
+        role=role, pic_url=pic_url, created_at=iso_to_utc(created_at))
+    db.add(tenant_user)
+    db.commit()
+    db.refresh(tenant_user)
+    return tenant_user
+
+
+# ------------------------------------------------------------------------------
+# Insert: Customer and Address
+# ------------------------------------------------------------------------------
+
+def insert_customer(
+        db: Session, id: int, shop_id: int, timestamp: str, first_name: str,
+        last_name: Optional[str] = None, email: Optional[str] = None,
+        phone: Optional[str] = None, tags: Optional[str] = None
+) -> Customer:
+    """Insert a new Customer row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Customer ID.
+        shop_id (int): Associated Shop ID.
+        timestamp (str): ISO-8601 timestamp string for customer creation.
+        first_name (str): Customer's first name.
+        last_name (Optional[str]): Customer's last name. Default is None.
+        email (Optional[str]): Customer's email. Default is None.
+        phone (Optional[str]): Customer's phone number. Default is None.
+        tags (Optional[str]): Customer tags (comma separated). Default is None.
+    Returns:
+        Customer: The newly created Customer object.
+    """
+
+    customer = Customer(
+        id=id, shop_id=shop_id, timestamp=iso_to_utc(timestamp),
+        first_name=first_name, last_name=last_name, email=email,
+        phone=phone, tags=tags)
+    db.add(customer)
+    db.commit()
+    db.refresh(customer)
+    return customer
+
+
+def insert_address(
+        db: Session, id: int, customer_id: int, shop_id: int, address1: str,
+        city: str, country: str, zip_code: str, company: Optional[str] = None,
+        address2: Optional[str] = None, state: Optional[str] = None,
+        default: bool = False
+) -> Address:
+    """Insert a new Address row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Address ID.
+        customer_id (int): Associated Customer ID.
+        shop_id (int): Associated Shop ID.
+        company (Optional[str]): Company name. Default is None.
+        address1 (str): Primary address line.
+        address2 (Optional[str]): Secondary address line. Default is None.
+        city (str): City of the address.
+        state (Optional[str]): State or province. Default is None.
+        country (str): Country of the address.
+        zip_code (str): ZIP or postal code.
+        default (bool): Whether this is the default address. Default is False.
+    Returns:
+        Address: The newly created Address object.
+    """
+
+    address = Address(
+        id=id, customer_id=customer_id, shop_id=shop_id, company=company,
+        address1=address1, address2=address2, city=city, state=state,
+        country=country, zip_code=zip_code, default=default)
+    db.add(address)
+    db.commit()
+    db.refresh(address)
+    return address
+
+
+# ------------------------------------------------------------------------------
+# Insert: Product and Variant
+# ------------------------------------------------------------------------------
+
+def insert_product(
+        db: Session, id: int, shop_id: int, title: str, vendor: str,
+        slug: str, timestamp: str, status: str,
+        product_type: Optional[str] = None, tags: Optional[str] = None
+) -> Product:
+    """Insert a new Product row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Product ID.
+        shop_id (int): Associated Shop ID.
+        title (str): Product title.
+        vendor (str): Vendor name.
+        slug (str): Product slug (unique per shop).
+        timestamp (str): ISO-8601 timestamp string for product creation.
+        status (str): Product status (e.g., 'active', 'archived').
+        product_type (Optional[str]): Product type. Default is None.
+        tags (Optional[str]): Product tags. Default is None.
+    Returns:
+        Product: The newly created Product object.
+    """
+    product = Product(
+        id=id, shop_id=shop_id, title=title, vendor=vendor,
+        product_type=product_type, slug=slug, timestamp=iso_to_utc(timestamp),
+        tags=tags, status=status)
+    db.add(product)
+    db.commit()
+    db.refresh(product)
+    return product
+
+
+def insert_variant(
+        db: Session, id: int, product_id: int, shop_id: int, title: str,
+        price: float, inv_item_id: int, inv_item_qty: int,
+        weight: Optional[int] = None, image_url: Optional[str] = None
+) -> Variant:
+    """Insert a new Variant row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Variant ID.
+        product_id (int): Associated Product ID.
+        shop_id (int): Associated Shop ID.
+        title (str): Variant title.
+        price (float): Variant price.
+        inv_item_id (int): Inventory item ID.
+        inv_item_qty (int): Inventory quantity.
+        weight (Optional[int]): Weight of the variant. Default is None.
+        image_url (Optional[str]): Image URL. Default is None.
+    Returns:
+        Variant: The newly created Variant object.
+    """
+
+    variant = Variant(
+        id=id, product_id=product_id, shop_id=shop_id, title=title,
+        price=price, inv_item_id=inv_item_id, inv_item_qty=inv_item_qty,
+        weight=weight, image_url=image_url)
+    db.add(variant)
+    db.commit()
+    db.refresh(variant)
+    return variant
+
+
+# ------------------------------------------------------------------------------
+# Insert: Order and LineItem
+# ------------------------------------------------------------------------------
+
+def insert_order(
+        db: Session, id: int, shop_id: int, order_number: int,
+        confirmed: bool, timestamp: str, currency: str, subtotal_price: float,
+        total_discount: float, total_tax: float, total_price: float,
+        financial_stat: str, customer_id: Optional[int] = None,
+        fulfillment_stat: Optional[str] = None
+) -> Order:
+    """Insert a new Order row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): Order ID.
+        customer_id (Optional[int]): Associated Customer ID. Default is None.
+        shop_id (int): Associated Shop ID.
+        order_number (int): Order number (unique per shop).
+        confirmed (bool): Whether the order is confirmed.
+        timestamp (str): ISO-8601 timestamp string for order creation.
+        currency (str): Currency code (e.g., 'INR').
+        subtotal_price (float): Subtotal price of the order.
+        total_discount (float): Total discount applied.
+        total_tax (float): Total tax applied.
+        total_price (float): Final total price.
+        financial_stat (str): Financial status (e.g., 'paid').
+        fulfillment_stat (Optional[str]): Fulfillment status. Default is None.
+    Returns:
+        Order: The newly created Order object.
+    """
+    order = Order(
+        id=id, customer_id=customer_id, shop_id=shop_id,
+        order_number=order_number, confirmed=confirmed,
+        timestamp=iso_to_utc(timestamp), currency=currency,
+        subtotal_price=subtotal_price, total_discount=total_discount,
+        total_tax=total_tax, total_price=total_price,
+        financial_stat=financial_stat, fulfillment_stat=fulfillment_stat)
+    db.add(order)
+    db.commit()
+    db.refresh(order)
+    return order
+
+
+def insert_line_item(
+        db: Session, id: int, order_id: int, product_id: int,
+        shop_id: int, variant_id: int, quantity: int, price: float,
+        total_discount: float
+) -> LineItem:
+    """Insert a new LineItem row and return the object.
+    Args:
+        db (Session): SQLAlchemy session object.
+        id (int): LineItem ID.
+        order_id (int): Associated Order ID.
+        product_id (int): Associated Product ID.
+        shop_id (int): Associated Shop ID.
+        variant_id (int): Associated Variant ID.
+        quantity (int): Quantity ordered.
+        price (float): Price per item.
+        total_discount (float): Discount applied to the line item.
+    Returns:
+        LineItem: The newly created LineItem object.
+    """
+    line_item = LineItem(
+        id=id, order_id=order_id, product_id=product_id,
+        shop_id=shop_id, variant_id=variant_id, quantity=quantity,
+        price=price, total_discount=total_discount)
+    db.add(line_item)
+    db.commit()
+    db.refresh(line_item)
+    return line_item
+
+
+# ------------------------------------------------------------------------------
+# Simple Tests:
+# ------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    # ts = "2025-09-11T12:13:18-04:00"
+    # print(f"Input: {ts}")
+    # dt = iso_to_utc(ts)
+    # print(f"Output: {dt} (UTC naive)")
+
+    # Drop n Create Again:
+    clear_entire_database()
+    create_all_tables()
+
+    # Create a new session
+    db = next(get_db())
+
+    # Shop and TenantUser
+    shop = insert_shop(
+        db=db, id=101, name="My Shop", domain="my.shop.com",
+        owner="Alice", email="check@gmail.com"
+    )
+    print(shop)
+
+    tenant_user = insert_tenant_user(
+        db=db, id=201, shop_id=101, email="another@mail.com", pass_hash="hashed_password",
+        role="admin", created_at="2025-09-11T12:13:18-04:00", pic_url="http://example.com/pic.jpg"
+    )
+    print(tenant_user)
+
+    # Customer and Address
+    customer = insert_customer(
+        db=db, id=301, shop_id=101, timestamp="2025-09-11T12:13:18-04:00",
+        first_name="Sarvesh", last_name=None, email="sarvesh@hotmail.com",
+        phone=None, tags="vip,main"
+    )
+    print(customer)
+
+    address = insert_address(
+        db=db, id=401, customer_id=301, shop_id=101, company='VIT Chennai',
+        address1="Vanadalur-Kelmbakkam Road", address2=None, city="Chennai",
+        state="TN", country="India", zip_code="600048", default=True
+    )
+    print(address)
+
+    # Product and Variant
+    product = insert_product(
+        db=db, id=501, shop_id=101, title="Cool T-Shirt", vendor="BrandX",
+        product_type="Apparel", slug="cool-tshirt", timestamp="2025-09-11T12:13:18-04:00",
+        tags="clothing,summer", status="active"
+    )
+    print(product)
+
+    variant = insert_variant(
+        db=db, id=601, product_id=501, shop_id=101, title="Size S",
+        price=190, inv_item_id=1001, inv_item_qty=50,
+        weight=200, image_url="http://example.com/image.jpg"
+    )
+    print(variant)
+    variant = insert_variant(
+        db=db, id=602, product_id=501, shop_id=101, title="Size M",
+        price=220, inv_item_id=1002, inv_item_qty=20,
+        weight=200, image_url="http://example.com/image.jpg"
+    )
+    print(variant)
+    variant = insert_variant(
+        db=db, id=603, product_id=501, shop_id=101, title="Size L",
+        price=250, inv_item_id=1003, inv_item_qty=0,
+        weight=200, image_url="http://example.com/image.jpg"
+    )
+    print(variant)
+
+    # Order and LineItem
+    order = insert_order(
+        db=db, id=701, customer_id=301, shop_id=101, order_number=1001,
+        confirmed=True, timestamp="2025-09-11T12:13:18-04:00", currency="INR",
+        subtotal_price=630, total_discount=50.0, total_tax=20, total_price=600.00,
+        financial_stat="paid", fulfillment_stat=None
+    )
+    print(order)
+
+    line_item = insert_line_item(
+        db=db, id=801, order_id=701, product_id=501, shop_id=101,
+        variant_id=601, quantity=2, price=190, total_discount=10.0
+    )
+    print(line_item)
+    line_item = insert_line_item(
+        db=db, id=802, order_id=701, product_id=501, shop_id=101,
+        variant_id=602, quantity=1, price=220, total_discount=40.0
+    )
+    print(line_item)
