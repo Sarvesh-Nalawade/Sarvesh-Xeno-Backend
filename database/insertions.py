@@ -1,114 +1,13 @@
-import os
-from dotenv import load_dotenv
+from typing import Optional
+from sqlalchemy.orm import Session
 
-import re
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-
-from db_models import (
-    Base, Shop, TenantUser,
+from database.models import (
+    Shop, TenantUser,
     Customer, Address, Product,
     Variant, Order, LineItem
 )
 
-
-# ------------------------------------------------------------------------------
-# Base and Constants:
-# ------------------------------------------------------------------------------
-
-load_dotenv()
-
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASS = os.getenv("DB_PASSWORD", None)
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "3306")
-DB_NAME = os.getenv("DB_DATABASE", "xeno_shopify")
-DB_CHAR = os.getenv("DB_CHARSET", "utf8mb4")
-VERBOSE = os.getenv("DB_VERBOSE", "true").lower() == "true"
-
-DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset={DB_CHAR}"
-
-engine = create_engine(DATABASE_URL, echo=VERBOSE, future=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-# ------------------------------------------------------------------------------
-# Helper Functions:
-# ------------------------------------------------------------------------------
-
-def iso_to_utc(iso_ts: str) -> datetime:
-    """Parse an ISO 8601 timestamp and return a naive UTC datetime
-
-    Args:
-        iso_ts (str): ISO-8601 timestamp string, e.g. "2025-09-11T12:13:18-04:00" or "2025-09-11T16:13:18Z"
-
-    Returns:
-        datetime: A naive datetime object in UTC timezone.
-
-    Raises:
-        ValueError: If the input string is not a valid ISO-8601 timestamp.
-
-    Example:
-        iso_to_utc_naive("2025-09-11T12:13:18-04:00")  -> datetime(2025,9,11,16,13,18)
-    """
-
-    if not iso_ts or not isinstance(iso_ts, str):
-        raise ValueError("iso_ts must be a non-empty ISO-8601 string")
-
-    s = iso_ts.strip()
-
-    # normalize trailing Z -> +00:00 because datetime.fromisoformat doesn't accept 'Z'
-    if s.endswith("Z"):
-        s = s[:-1] + "+00:00"
-
-    try:
-        dt = datetime.fromisoformat(s)
-    except ValueError:
-        # fallback: insert colon into timezone if format is like ...+HHMM or ...-HHMM
-        m = re.match(r"^(.*)([+-]\d{2})(\d{2})$", s)
-        if m:
-            s = f"{m.group(1)}{m.group(2)}:{m.group(3)}"
-            dt = datetime.fromisoformat(s)
-        else:
-            # can't parse
-            raise
-
-    # If timestamp is naive (no tz info), we assume it's already UTC.
-    if dt.tzinfo is None:
-        # return naive datetime (assumed UTC)
-        return dt.replace(tzinfo=None)
-
-    # Convert to UTC and return naive datetime
-    dt_utc = dt.astimezone(timezone.utc).replace(tzinfo=None)
-    return dt_utc
-
-
-# ------------------------------------------------------------------------------
-# DB Utilities:
-# ------------------------------------------------------------------------------
-
-def get_db():
-    """Provide a transactional session."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-def clear_entire_database():
-    """Drops all tables in the database."""
-    Base.metadata.drop_all(bind=engine)
-    print("⚠️  Cleared Entire DB")
-
-
-def create_all_tables():
-    """Creates all tables in the database."""
-    Base.metadata.create_all(bind=engine)
-    print("✅ Created All Tables")
+from database.utils import iso_to_utc
 
 
 # ------------------------------------------------------------------------------
@@ -372,6 +271,8 @@ def insert_line_item(
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    from database import get_db, clear_entire_database, create_all_tables
+
     # ts = "2025-09-11T12:13:18-04:00"
     # print(f"Input: {ts}")
     # dt = iso_to_utc(ts)

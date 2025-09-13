@@ -40,6 +40,17 @@
     SHOW TABLES;
     ```
 
+5. Run Initialization script:  
+    Assuming you are in the root directory of the project, run:
+    ```bash
+    python -m database.insertions
+    ```
+
+6. To make all initial entries, run:
+    ```bash
+    python -m database.first_entries
+    ```
+
 
 ## Design:
 
