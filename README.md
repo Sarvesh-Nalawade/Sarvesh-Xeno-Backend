@@ -63,7 +63,7 @@
 
 9. To make all initial (synthetic) entries, run:
     ```bash
-    python -m database.entries.create
+    python -m database.entries.synthetic
     ```
 
 
