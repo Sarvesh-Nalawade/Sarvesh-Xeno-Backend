@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from database.models import Base
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Select
 from sqlalchemy.orm import sessionmaker, Session
 
 # ------------------------------------------------------------------------------

@@ -37,6 +37,8 @@ class UserCredentials(BaseModel):
     email: str 
     otp : int
 
+class VerifyCrendentials(BaseModel):
+    email: str
 
 # class UserResponse(BaseModel):
 #     email: str
@@ -48,17 +50,18 @@ class Token(BaseModel):
     token_type: str
 
 
-def send_mail(user_email: str, opt: int) -> Dict:
+def send_mail(user_email: str):
+    otp = 54321
     params: resend.Emails.SendParams = {
         "from": "onboarding@resend.dev",
         "to": [user_email],
         "subject": "Hello World", 
         # send otp in html 
-        "html": f"<strong>hi, your otp is: {opt}</strong>"
+        "html": f"<strong>hi, your otp is: {otp}</strong>"
     }
     email: resend.Email = resend.Emails.send(params)
     
-    email_otp_dict[user_email] = opt
+    email_otp_dict[user_email] = otp
     
     return email
 
@@ -70,10 +73,15 @@ def verify_otp(user_email: str, otp: int) -> bool:
     return False    
 
 
-def authenticate_user(request: Request,  str, db):
+def authenticate_user(request: Request,  db: Session):
+    print("request:", request.cookies)
     token = request.cookies.get("access_token")
-    payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
-    user = get_user(payload.id, db)
+    # print("token:", token)
+    if not token:
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Could not validate credentials")
+    payload = jwt.decode(str(token), str(SECRET_KEY), ALGORITHM)
+    user_id = payload.get("user_id")
+    user = get_user(user_id, db)
     return user
    
 
@@ -91,7 +99,7 @@ def create_access_token(
     to_encode = {"user_id": user_id}
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode["exp"] = str(int(expire.timestamp()))
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, str(SECRET_KEY), algorithm=ALGORITHM)
     
     return encoded_jwt
 
@@ -108,11 +116,12 @@ async def login(user_credentials: UserCredentials, db: Session = Depends(get_db)
         if user is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
-        access_token_expires = timedelta(minutes=60)
+        access_token_expires = timedelta(minutes=360)
         access_token = create_access_token(user.id, access_token_expires)
         
         response = JSONResponse(content={"message": "Login successful"})
-        response.set_cookie(key="access_token", value=access_token, httponly=True, path="/")
+        response.set_cookie(key="access_token", value=access_token, httponly=True, path="/", secure=True, samesite='none')
+        # response.set_cookie(key="access_token", value=access_token, httponly=True, path="/")
         
         return response  
     else:
@@ -121,8 +130,8 @@ async def login(user_credentials: UserCredentials, db: Session = Depends(get_db)
 
 
 @router.post("/send-email", status_code=status.HTTP_200_OK)
-async def send_email(user_credentials: UserCredentials):
-    send_mail(user_credentials.email, user_credentials.otp)  
+async def send_email(verify_credentials: VerifyCrendentials):
+    send_mail(verify_credentials.email)  
 
 
 @router.post("/logout")

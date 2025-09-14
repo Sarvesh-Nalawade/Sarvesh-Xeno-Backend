@@ -313,3 +313,46 @@
 # Others:
 webhook event version = 2025-07
 
+# HTTPS:
+
+
+
+# HTTPS Cert:
+
+1. [Install OpenSSL](https://slproweb.com/products/Win32OpenSSL.html)
+    - PATH: `C:\Program Files\OpenSSL-Win64`
+
+2. Created file: `C:\Program Files\OpenSSL-Win64\bin\openssl.cnf`
+    ```
+    # Minimal OpenSSL configuration file
+    [ req ]
+    distinguished_name = req_distinguished_name
+    x509_extensions = v3_req
+    prompt = no
+
+    [ req_distinguished_name ]
+    CN = localhost
+
+    [ v3_req ]
+    subjectAltName = @alt_names
+
+    [ alt_names ]
+    DNS.1 = localhost
+    ```
+
+3. Create self-signed cert:
+    ```powershell
+    openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost" -config "C:\Program Files\OpenSSL-Win64\bin\openssl.cnf"
+    
+    openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" -config "C:\Program Files\OpenSSL-Win64\bin\openssl.cnf"
+    ```
+
+5. Export:
+    ```powershell
+    openssl x509 -in cert.pem -out cert.crt
+    ```
+
+4. Run FastAPI with HTTPS:
+    ```powershell
+    uvicorn main:app --host 127.0.0.1 --port 8000 --ssl-keyfile=key.pem --ssl-certfile=cert.pem
+    ```

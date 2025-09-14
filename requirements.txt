@@ -1,4 +1,9 @@
+fastapi[all]
 pytz
+python-dotenv
+passlib[bcrypt]
+resend
+PyJWT
 python-dotenv
 SQLAlchemy
 PyMySQL
