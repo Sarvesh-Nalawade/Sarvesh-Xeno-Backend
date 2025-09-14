@@ -40,15 +40,30 @@
     SHOW TABLES;
     ```
 
-5. Run Initialization script:  
-    Assuming you are in the root directory of the project, run:
+5. To initialize the database tables, run:
     ```bash
-    python -m database.insertions
+    python -m database.entries.initialize
     ```
 
-6. To make all initial entries, run:
+6. To make some sample entries and see the db:
     ```bash
-    python -m database.first_entries
+    python -m database.entries.sample
+    ```
+
+7. To SEE the database:
+    ```bash
+    python mini_codes/sql_db/mysql_to_sqlite.py
+    ```
+    Then, open the 'temp_check.db' file using SQLite Viewer or any SQLite client.
+
+8. To clear the database (all tables and data):
+    ```bash
+    python -m database.entries.clear
+    ```
+
+9. To make all initial (synthetic) entries, run:
+    ```bash
+    python -m database.entries.create
     ```
 
 
