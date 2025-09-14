@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 
 from database.models import (
@@ -267,10 +267,172 @@ def insert_line_item(
 
 
 # ------------------------------------------------------------------------------
+# Bulk Insertion Functions for products and variants
+# ------------------------------------------------------------------------------
+
+def bulk_insert_products(db: Session, products: List[dict], batch_size: int = 500):
+    """
+    Insert multiple products into DB in bulk.
+    Args:
+        db (Session): SQLAlchemy session.
+        products (List[dict]): List of product dictionaries.
+        batch_size (int): Commit in batches to avoid memory overhead.
+    """
+    objs = []
+    counter = 0
+    total = len(products)
+
+    for i, prod in enumerate(products, start=1):
+        counter += 1
+        objs.append(Product(
+            id=prod['id'],
+            shop_id=prod['shop_id'],
+            title=prod['title'],
+            vendor=prod['vendor'],
+            product_type=prod.get('product_type'),
+            slug=prod['slug'],
+            timestamp=iso_to_utc(prod['timestamp']),
+            status=prod['status'],
+            tags=prod.get('tags')
+        ))
+
+        if i % batch_size == 0:
+            db.bulk_save_objects(objs)
+            db.commit()
+            objs.clear()
+            print(f"  - Inserted [{counter} / {total}] products...")
+
+    if objs:
+        db.bulk_save_objects(objs)
+        db.commit()
+        print(f"  - Inserted [{counter} / {total}] products...")
+
+
+def bulk_insert_variants(db: Session, variants: List[dict], batch_size: int = 500):
+    """
+    Insert multiple variants into DB in bulk.
+    Args:
+        db (Session): SQLAlchemy session.
+        variants (List[dict]): List of variant dictionaries.
+        batch_size (int): Commit in batches to avoid memory overhead.
+    """
+    objs = []
+    counter = 0
+    total = len(variants)
+
+    for i, var in enumerate(variants, start=1):
+        counter += 1
+        objs.append(Variant(
+            id=var['id'],
+            product_id=var['product_id'],
+            shop_id=var['shop_id'],
+            title=var['title'],
+            price=var['price'],
+            inv_item_id=var['inv_item_id'],
+            inv_item_qty=var['inv_item_qty'],
+            weight=var.get('weight'),
+            image_url=var.get('image_url')
+        ))
+
+        if i % batch_size == 0:
+            db.bulk_save_objects(objs)
+            db.commit()
+            objs.clear()
+            print(f"  - Inserted [{counter} / {total}] variants...")
+
+    if objs:
+        db.bulk_save_objects(objs)
+        db.commit()
+        print(f"  - Inserted [{counter} / {total}] variants...")
+
+
+# ------------------------------------------------------------------------------
+# Bulk Insertion Functions for orders and line items
+# ------------------------------------------------------------------------------
+
+def bulk_insert_orders(db: Session, orders: List[dict], batch_size: int = 500):
+    """
+    Insert multiple orders into DB in bulk.
+    Args:
+        db (Session): SQLAlchemy session.
+        orders (List[dict]): List of order dictionaries.
+        batch_size (int): Commit in batches to avoid memory overhead.
+    """
+    objs = []
+    counter = 0
+    total = len(orders)
+
+    for i, order in enumerate(orders, start=1):
+        counter += 1
+        objs.append(Order(
+            id=order['id'],
+            customer_id=order.get('customer_id'),
+            shop_id=order['shop_id'],
+            order_number=order['order_number'],
+            confirmed=order['confirmed'],
+            timestamp=iso_to_utc(order['timestamp']),
+            currency=order['currency'],
+            subtotal_price=order['subtotal_price'],
+            total_discount=order['total_discount'],
+            total_tax=order['total_tax'],
+            total_price=order['total_price'],
+            financial_stat=order['financial_stat'],
+            fulfillment_stat=order.get('fulfillment_stat')
+        ))
+
+        if i % batch_size == 0:
+            db.bulk_save_objects(objs)
+            db.commit()
+            objs.clear()
+            print(f"  - Inserted [{counter} / {total}] orders...")
+
+    if objs:
+        db.bulk_save_objects(objs)
+        db.commit()
+        print(f"  - Inserted [{counter} / {total}] orders...")
+
+
+def bulk_insert_line_items(db: Session, line_items: List[dict], batch_size: int = 1000):
+    """
+    Insert multiple line items into DB in bulk.
+    Args:
+        db (Session): SQLAlchemy session.
+        line_items (List[dict]): List of line item dictionaries.
+        batch_size (int): Commit in batches.
+    """
+    objs = []
+    counter = 0
+    total = len(line_items)
+
+    for i, item in enumerate(line_items, start=1):
+        counter += 1
+        objs.append(LineItem(
+            id=item['id'],
+            order_id=item['order_id'],
+            product_id=item['product_id'],
+            shop_id=item['shop_id'],
+            variant_id=item['variant_id'],
+            quantity=item['quantity'],
+            price=item['price'],
+            total_discount=item['total_discount']
+        ))
+
+        if i % batch_size == 0:
+            db.bulk_save_objects(objs)
+            db.commit()
+            objs.clear()
+            print(f"  - Inserted [{counter} / {total}] line items...")
+
+    if objs:
+        db.bulk_save_objects(objs)
+        db.commit()
+        print(f"  - Inserted [{counter} / {total}] line items...")
+
+
+# ------------------------------------------------------------------------------
 # Simple Tests:
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
     # Run the script:
     print("Please run: `python -m database.entries.sample_insertions`")
-    

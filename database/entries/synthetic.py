@@ -7,8 +7,10 @@ import bcrypt
 from database.insertions import (
     insert_shop, insert_tenant_user,
     insert_customer, insert_address,
-    insert_product, insert_variant,
-    insert_order, insert_line_item
+    # insert_product,  insert_variant,
+    # insert_order, insert_line_item
+    bulk_insert_products, bulk_insert_variants,
+    bulk_insert_orders, bulk_insert_line_items
 )
 
 from database import get_db, clear_entire_database, create_all_tables
@@ -86,30 +88,78 @@ def create_entries():
         print(resp)
 
     # Insert the products in the database:
-    print("\n\n\n⌛ Inserting products data...")
-    products = load_json_file('./data_product.json')
-    for prod in products:
-        resp = insert_product(
-            db=db, id=prod['id'], shop_id=prod['shop_id'],
-            title=prod['title'], vendor=prod['vendor'],
-            slug=prod['slug'], timestamp=prod['timestamp'],
-            status=prod['status'], product_type=prod['product_type'],
-            tags=prod['tags']
-        )
-        print(resp)
+    # print("\n\n\n⌛ Inserting products data...")
+    # products = load_json_file('./data_product.json')
+    # for prod in products:
+    #     resp = insert_product(
+    #         db=db, id=prod['id'], shop_id=prod['shop_id'],
+    #         title=prod['title'], vendor=prod['vendor'],
+    #         slug=prod['slug'], timestamp=prod['timestamp'],
+    #         status=prod['status'], product_type=prod['product_type'],
+    #         tags=prod['tags']
+    #     )
+    #     print(resp)
 
     # Insert the variants in the database:
-    print("\n\n\n⌛ Inserting variants data...")
+    # print("\n\n\n⌛ Inserting variants data...")
+    # variants = load_json_file('./data_variant.json')
+    # for var in variants:
+    #     resp = insert_variant(
+    #         db=db, id=var['id'], product_id=var['product_id'],
+    #         shop_id=var['shop_id'], title=var['title'],
+    #         price=var['price'], inv_item_id=var['inv_item_id'],
+    #         inv_item_qty=var['inv_item_qty'], weight=var['weight'],
+    #         image_url=var['image_url']
+    #     )
+    #     print(resp)
+
+    # Insert the orders in the database:
+    # Too Expensive to insert all orders 1 by 1 [1.5k appx]:
+    # print("\n\n\n⌛ Inserting orders data...")
+    # orders = load_json_file('./data_order.json')
+    # for order in orders:
+    #     resp = insert_order(
+    #         db=db, id=order['id'], customer_id=order['customer_id'], shop_id=order['shop_id'],
+    #         order_number=order['order_number'], confirmed=order['confirmed'],
+    #         timestamp=order['timestamp'], currency=order['currency'],
+    #         subtotal_price=order['subtotal_price'], total_discount=order['total_discount'],
+    #         total_tax=order['total_tax'], total_price=order['total_price'],
+    #         financial_stat=order['financial_stat'], fulfillment_stat=order['fulfillment_stat']
+    #     )
+    #     print(resp)
+
+    # Insert the line items in the database:
+    # Too Expensive to insert all line items 1 by 1 [15k appx]:
+    # print("\n\n\n⌛ Inserting line items data...")
+    # line_items = load_json_file('./data_line_item.json')
+    # for item in line_items:
+    #     resp = insert_line_item(
+    #         db=db, id=item['id'], order_id=item['order_id'],
+    #         product_id=item['product_id'], shop_id=item['shop_id'],
+    #         variant_id=item['variant_id'], quantity=item['quantity'],
+    #         price=item['price'], total_discount=item['total_discount']
+    #     )
+    #     print(resp)
+
+    # Insert the products in bulk in the database:
+    print("\n\n\n⌛ Bulk Inserting products data...")
+    products = load_json_file('./data_product.json')
+    bulk_insert_products(db=db, products=products, batch_size=30)
+
+    # Insert the variants in bulk in the database:
+    print("\n\n\n⌛ Bulk Inserting variants data...")
     variants = load_json_file('./data_variant.json')
-    for var in variants:
-        resp = insert_variant(
-            db=db, id=var['id'], product_id=var['product_id'],
-            shop_id=var['shop_id'], title=var['title'],
-            price=var['price'], inv_item_id=var['inv_item_id'],
-            inv_item_qty=var['inv_item_qty'], weight=var['weight'],
-            image_url=var['image_url']
-        )
-        print(resp)
+    bulk_insert_variants(db=db, variants=variants, batch_size=50)
+
+    # Insert the orders in bulk in the database:
+    print("\n\n\n⌛ Bulk Inserting orders data...")
+    orders = load_json_file('./data_order.json')
+    bulk_insert_orders(db=db, orders=orders, batch_size=500)
+
+    # Insert the line items in bulk in the database:
+    print("\n\n\n⌛ Bulk Inserting line items data...")
+    line_items = load_json_file('./data_line_item.json')
+    bulk_insert_line_items(db=db, line_items=line_items, batch_size=1000)
 
 
 if __name__ == "__main__":
