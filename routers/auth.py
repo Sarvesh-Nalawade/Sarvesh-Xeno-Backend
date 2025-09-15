@@ -51,7 +51,7 @@ class Token(BaseModel):
 
 
 def send_mail(user_email: str):
-    otp = 54321
+    otp = 73462
     params: resend.Emails.SendParams = {
         "from": "onboarding@resend.dev",
         "to": [user_email],

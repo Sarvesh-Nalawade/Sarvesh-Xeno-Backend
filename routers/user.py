@@ -31,18 +31,52 @@ class CustomerModel(BaseModel):
     "/get-customers", response_model=list[CustomerModel], status_code=status.HTTP_200_OK
 )
 async def get_customers(request: Request, db: Session = Depends(get_db)):
-
-    # user = authen    dfklafkdlsfja;ldskfja;skjflsadklfticate_user(request, db)
-
-    shop_id = Select(models.TenantUser.shop_id).where(
+    # Get shop_id for the default email
+    shop_id_subq = Select(models.TenantUser.shop_id).where(
         models.TenantUser.email == mail_default
     )
 
-    stmt = Select(models.Customer).where(models.Customer.shop_id == shop_id)
+    # Compose query: customers with their total revenue
+    stmt = (
+        Select(
+            models.Customer.id,
+            models.Customer.first_name,
+            models.Customer.last_name,
+            models.Customer.email,
+            models.Customer.phone,
+            models.Customer.tags,
+            func.coalesce(func.sum(models.Order.total_price), 0.0).label(
+                "revenue_generated"
+            ),
+        )
+        .outerjoin(models.Order, models.Customer.id == models.Order.customer_id)
+        .where(models.Customer.shop_id == shop_id_subq)
+        .group_by(
+            models.Customer.id,
+            models.Customer.first_name,
+            models.Customer.last_name,
+            models.Customer.email,
+            models.Customer.phone,
+            models.Customer.tags,
+        )
+    )
 
-    results = db.execute(stmt).scalars().all()
+    results = db.execute(stmt).all()
+    # Map results to CustomerModel
+    customers = [
+        CustomerModel(
+            id=row.id,
+            first_name=row.first_name,
+            last_name=row.last_name,
+            email=row.email,
+            phone=row.phone,
+            tags=row.tags,
+            revenue_generated=row.revenue_generated,
+        )
+        for row in results
+    ]
+    return customers
 
-    return results
 
 
 class VariantModel(BaseModel):
