@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter 
 from routers.auth import router as auth_router 
 from routers.user import router as user_router
+from routers.shopify import router as shopify_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -23,9 +24,9 @@ app.add_middleware(
 )
 
 
-app.include_router(auth_router) 
-app.include_router(user_router) 
-
+app.include_router(auth_router)
+app.include_router(user_router)
+app.include_router(shopify_router)      
 
 
 @app.get("/")
@@ -34,4 +35,4 @@ async def hello_world():
 
 if __name__ == "__main__":
     import uvicorn  
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("main:app", reload=True, port=8000)

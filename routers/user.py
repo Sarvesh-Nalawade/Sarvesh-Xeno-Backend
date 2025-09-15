@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import Select
 from pydantic import BaseModel
 from database import get_db, models
+from datetime import datetime
 
 
 router = APIRouter(
@@ -62,10 +63,6 @@ async def get_products(request: Request, db: Session = Depends(get_db)):
 
     return results
 
-
-
-    
-      
 class OwnerModel(BaseModel):  
     owner: str
     name: str
@@ -83,3 +80,26 @@ async def get_shop_details(request: Request, db: Session = Depends(get_db)):
     results = db.execute(stmt).scalars().all()
 
     return results
+
+class OrderModel(BaseModel):
+    # id, date, status, qunatity, price 
+    order_number: int
+    timestamp: datetime
+    fulfillment_stat: str | None = None
+    confirmed: int
+    total_price: float
+
+@router.get("/get-orders", response_model=list[OrderModel], status_code=status.HTTP_200_OK)
+async def get_orders(request: Request, db: Session = Depends(get_db)): 
+    
+    shop_id = Select(models.TenantUser.shop_id).where(models.TenantUser.email == mail_default) 
+    
+    stmt = Select(models.Order).where(models.Order.shop_id == shop_id)
+    
+    results = db.execute(stmt).scalars().all()
+
+
+    print(results)
+    return results
+
+    
