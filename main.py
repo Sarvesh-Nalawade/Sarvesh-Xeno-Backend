@@ -7,11 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost:3001", # The origin of your Next.js app
-    "http://localhost:3000", # The origin of your Next.js app
-    "https://localhost:3000", # The origin of your Next.js app
-    "https://localhost:3001", # The origin of your Next.js app
-    # Add other origins if needed
+    "https://sarvesh-xeno-frontend.vercel.app",
+    "http://localhost:3001",
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "https://localhost:3001",
 ]
 
 # Add the CORSMiddleware to your application
@@ -36,3 +36,6 @@ async def hello_world():
 if __name__ == "__main__":
     import uvicorn  
     uvicorn.run("main:app", reload=True, port=8000)
+
+
+# uvicorn main:app --host 0.0.0.0 --port 8000

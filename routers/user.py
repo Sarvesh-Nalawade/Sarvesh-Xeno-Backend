@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from routers.auth import authenticate_user
 from sqlalchemy.orm import Session
-from sqlalchemy import Select, func
+from sqlalchemy import Select, func, and_
 from pydantic import BaseModel
 from database import get_db, models
 from datetime import datetime
@@ -76,7 +76,6 @@ async def get_customers(request: Request, db: Session = Depends(get_db)):
         for row in results
     ]
     return customers
-
 
 
 class VariantModel(BaseModel):
@@ -217,28 +216,20 @@ async def get_total(request: Request, db: Session = Depends(get_db)):
     stmt = Select(func.count(models.Customer.id)).where(
         models.Customer.shop_id == shop_id
     )
-
-    total_coustomers = db.execute(stmt).scalar_one or 0
-    print(total_coustomers)
+    total_customers = db.execute(stmt).scalar() or 0
 
     stmt = Select(func.count(models.Product.id)).where(
         models.Product.shop_id == shop_id
     )
+    total_products = db.execute(stmt).scalar() or 0
 
-    total_products = db.execute(stmt).scalar or 0
-    print(total_products)
-
-    stmt = Select(func.count(models.Order.total_price)).where(
-        models.Order.shop_id == shop_id and models.Order.confirmed == True
+    stmt = Select(func.sum(models.Order.total_price)).where(
+        and_(models.Order.shop_id == shop_id, models.Order.confirmed == True)
     )
-
-    total_revenue = db.execute(stmt).scalar or 0
-
-    total_revenue = round(total_revenue, 2)
-    print(total_revenue)
+    total_revenue = db.execute(stmt).scalar() or 0
 
     return TotalModel(
         total_products=total_products,
-        total_customers=total_coustomers,
-        total_revenue=total_revenue,
+        total_customers=total_customers,
+        total_revenue=round(float(total_revenue), 2),
     )

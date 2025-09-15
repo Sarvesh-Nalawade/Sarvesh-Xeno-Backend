@@ -19,11 +19,10 @@ async def add_shopify(request: Request, db: Session = Depends(get_db)):
     # "https://sarvesh-xeno-store.myshopify.com/95800131877/orders/a8a3c369ab4c7e3dba4c01cb05d03a61/authenticate?key=79e6101bbc4e51708d14102f6991a524"
 
     # print(customer_data)
-    
-    
-    with open("./3_webhook_customer.json", 'w') as f:
-        json.dump(customer_data, f)
-        
+
+    # with open("./3_webhook_customer.json", 'w') as f:
+    #     json.dump(customer_data, f)
+
     customer_model = models.Customer(
         shop_id=95800131877,
         id=customer_data.get("id"),
@@ -34,6 +33,8 @@ async def add_shopify(request: Request, db: Session = Depends(get_db)):
         phone=customer_data.get("phone"),
         tags=customer_data.get("tags"),
     )
+    print(
+        f"New Customer: {customer_data.get('id')} - {customer_data.get('first_name')} {customer_data.get('last_name')} added to database.")
 
     db.add(customer_model)
     db.commit()

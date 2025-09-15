@@ -85,12 +85,14 @@
 3. The relevant data needs conversion from NoSQL (JSON) to SQL (Tables).
 
 4. The tables are designed in a way to minimize redundancy and optimize relationships using Foreign Keys. These are the tables I designed:
-    1. Customer
-    2. Address
-    3. Product
-    4. Variant
-    5. Order
-    6. LineItem
+    1. Shop
+    2. Tenant User
+    3. Customer
+    4. Address
+    5. Product
+    6. Variant
+    7. Order
+    8. LineItem
 
 5. Additionally for multi-tenancy, these two tables are added:
     1. Shop  
